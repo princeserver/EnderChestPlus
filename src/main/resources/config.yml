@@ -1,0 +1,8 @@
+MySql:
+  Host: localhost
+  Port: 3306
+  Database: minecraft_EnderChest
+  UserName: mcadmin
+  TableName1: pl_ec_unlocked_page
+  TableName2: player_enderchest
+  PassWord: fhlasr_Minecraft

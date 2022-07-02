@@ -1,0 +1,13 @@
+name: EnderChestPlus
+version: '${version}'
+main: com.github.majisyou.enderchestplus.EnderChestPlus
+api-version: 1.19
+softdepend: [Vault]
+authors: [ majisyou ]
+
+commands:
+  watchdog:
+    description: enderChest確認よう
+    usage: 失敗
+    permission: EnderChest.admin
+
