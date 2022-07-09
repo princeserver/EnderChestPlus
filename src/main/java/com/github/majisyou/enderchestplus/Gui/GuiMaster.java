@@ -74,7 +74,7 @@ public class GuiMaster {
                                 ItemMeta LockPlateMeta = LockPlate.getItemMeta();
                                 String LockPlateName = LockPlateMeta.getDisplayName()+"§c＜未開放＞";
                                 List<String> Lore = new ArrayList<>();
-                                Cost += 2000 * (i-1);
+                                Cost += 1000* Math.pow (2,(i-1));
                                 Lore.add(ChatColor.WHITE+"合計"+ChatColor.GOLD+Cost+ChatColor.WHITE+"で開放できます");
                                 int LockCustomModel = LockPlateMeta.getCustomModelData()+10;
                                 LockPlateMeta.setLore(Lore);

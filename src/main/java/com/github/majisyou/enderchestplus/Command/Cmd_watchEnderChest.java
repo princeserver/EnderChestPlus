@@ -29,7 +29,7 @@ public class Cmd_watchEnderChest implements CommandExecutor {
                     if((args[2].matches("-?\\d+"))){
                         int page = Integer.parseInt(args[2]);
                         sender.sendMessage(offlinePlayer.getName()+"のエンダーチェストを確認する。");
-                        Inventory inventory = Bukkit.createInventory(null,36,args[0]+"のエンダーチェストの"+page+"ページ");
+                        Inventory inventory = Bukkit.createInventory(null,36,args[1]+"のエンダーチェストの"+page+"ページ");
                         EnderSystem.ReadEnderPage(offlinePlayer,inventory,page);
                         player.openInventory(inventory);
                         return true;

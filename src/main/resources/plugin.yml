@@ -1,7 +1,7 @@
 name: EnderChestPlus
 version: '${version}'
 main: com.github.majisyou.enderchestplus.EnderChestPlus
-api-version: 1.19
+api-version: 1.18
 softdepend: [Vault]
 authors: [ majisyou ]
 
@@ -10,4 +10,10 @@ commands:
     description: enderChest確認よう
     usage: 失敗
     permission: EnderChest.admin
+
+  EnderChestDelete:
+    description: enderchestの中身を消す
+    usage: 失敗
+    permission: EnderChest.admin
+
 

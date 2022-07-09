@@ -9,6 +9,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -39,13 +40,24 @@ public class EnderSystem {
 //        inventory.clear();
     }
 
+    public static void deleteEnderPage(OfflinePlayer player,int page){
+        EnderChestMySql statement = new EnderChestMySql();
+        statement.deleteEnderChest(player.getUniqueId(),page);
+    }
+
+    public static void deleteEnderChest(OfflinePlayer player){
+        EnderChestMySql statement = new EnderChestMySql();
+        statement.deleteLock(player.getUniqueId());
+        statement.deleteEnderChestAll(player.getUniqueId());
+        data.remove(player.getUniqueId());
+    }
+
     public static Integer CalculateCost(Player player,int page){
         int Cost = 0;
-
         for (int i = 2 ; i <= page;i++){
             int UnlockPage = getEClockPage(player);
             if(UnlockPage < i){
-                Cost += 2000 * (i-1);
+                Cost += 1000* Math.pow (2,(i-1));
             }
         }
 
@@ -63,7 +75,7 @@ public class EnderSystem {
 
     public static boolean removeBank(Player player,double money){
         Economy eco  = EnderChestPlus.getEconomy();
-        if(eco.getBalance(player) - money < 0.0D){
+        if(money > getBankMoney(player)){
 //            plugin.getLogger().info("(BS)"+player.getName()+"の口座に十分なお金が無かったため、"+money+"Eを徴収できなかった");
             return false;
         }
@@ -96,6 +108,47 @@ public class EnderSystem {
         EnderChestMySql statement = new EnderChestMySql();
         data = statement.readEClockAll();
     }
+
+    public static void onDisableEvent(){
+        List<World> worlds = plugin.getServer().getWorlds();
+        List<Player> onlinePlayers = new ArrayList<>();
+        for (World world:worlds){
+            onlinePlayers = world.getPlayers();
+            for (Player player:onlinePlayers){
+                switch (player.getOpenInventory().getTitle()){
+                    case "エンダーチェストPage1"->{
+                        EnderSystem.RecordEnderPage(player,player.getOpenInventory().getTopInventory(),1);
+                    }
+                    case "エンダーチェストPage2"->{
+                        EnderSystem.RecordEnderPage(player,player.getOpenInventory().getTopInventory(),2);
+                    }
+                    case "エンダーチェストPage3"->{
+                        EnderSystem.RecordEnderPage(player,player.getOpenInventory().getTopInventory(),3);
+                    }
+                    case "エンダーチェストPage4"->{
+                        EnderSystem.RecordEnderPage(player,player.getOpenInventory().getTopInventory(),4);
+                    }
+                    case "エンダーチェストPage5"->{
+                        EnderSystem.RecordEnderPage(player,player.getOpenInventory().getTopInventory(),5);
+                    }
+                    case "エンダーチェストPage6"->{
+                        EnderSystem.RecordEnderPage(player,player.getOpenInventory().getTopInventory(),6);
+                    }
+                    case "エンダーチェストPage7"->{
+                        EnderSystem.RecordEnderPage(player,player.getOpenInventory().getTopInventory(),7);
+                    }
+                    case "エンダーチェストPage8"->{
+                        EnderSystem.RecordEnderPage(player,player.getOpenInventory().getTopInventory(),8);
+                    }
+                    case "エンダーチェストPage9"->{
+                        EnderSystem.RecordEnderPage(player,player.getOpenInventory().getTopInventory(),9);
+                    }
+                }
+                player.closeInventory();
+            }
+        }
+    }
+
 
     public static void setEClockPage(OfflinePlayer player,int page){
         if(page > 0 && page < 10){

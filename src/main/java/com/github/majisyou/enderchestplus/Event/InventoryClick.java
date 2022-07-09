@@ -3,6 +3,7 @@ package com.github.majisyou.enderchestplus.Event;
 import com.github.majisyou.enderchestplus.EnderChestPlus;
 import com.github.majisyou.enderchestplus.Gui.GuiMaster;
 import com.github.majisyou.enderchestplus.System.EnderSystem;
+import com.github.majisyou.enderchestplus.System.SoundManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ public class InventoryClick implements Listener {
                     if(event.getCurrentItem().getType().equals(Material.WHITE_STAINED_GLASS_PANE)){
                         if(event.getCurrentItem().getItemMeta().hasCustomModelData()){
                             event.setCancelled(true);
+                            SoundManager.OpenPage((Player) event.getWhoClicked());
                             if(!event.getInventory().getType().equals(InventoryType.PLAYER)){
                                 switch (event.getCurrentItem().getItemMeta().getDisplayName()){
                                     case "1ページ" ->{
@@ -110,44 +112,60 @@ public class InventoryClick implements Listener {
                    if(event.getSlot()==0){
                        switch (event.getView().getTitle()){
                            case "2ページまで開放しますか？" ->{
-                               EnderSystem.setEClockPage((Player) event.getWhoClicked(),2);
-                               EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),2));
-                               plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの2ページを解放した");
+                               if(EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),2))){
+                                   EnderSystem.setEClockPage((Player) event.getWhoClicked(),2);
+                                   plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの2ページを解放した");
+                                   SoundManager.sendSuccess((Player) event.getWhoClicked());
+                               }
                            }
                            case "3ページまで開放しますか？" ->{
-                               EnderSystem.setEClockPage((Player) event.getWhoClicked(),3);
-                               EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),3));
-                               plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの3ページを解放した");
+                               if(EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),3))){
+                                   EnderSystem.setEClockPage((Player) event.getWhoClicked(),3);
+                                   plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの3ページを解放した");
+                                   SoundManager.sendSuccess((Player) event.getWhoClicked());
+                               }
                            }
                            case "4ページまで開放しますか？" ->{
-                               EnderSystem.setEClockPage((Player) event.getWhoClicked(),4);
-                               EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),4));
-                               plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの4ページを解放した");
+                               if(EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),4))){
+                                   EnderSystem.setEClockPage((Player) event.getWhoClicked(),4);
+                                   plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの4ページを解放した");
+                                   SoundManager.sendSuccess((Player) event.getWhoClicked());
+                               }
                            }
                            case "5ページまで開放しますか？" ->{
-                               EnderSystem.setEClockPage((Player) event.getWhoClicked(),5);
-                               EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),5));
-                               plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの5ページを解放した");
+                               if(EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),5))){
+                                   EnderSystem.setEClockPage((Player) event.getWhoClicked(),5);
+                                   plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの5ページを解放した");
+                                   SoundManager.sendSuccess((Player) event.getWhoClicked());
+                               }
                            }
                            case "6ページまで開放しますか？" ->{
-                               EnderSystem.setEClockPage((Player) event.getWhoClicked(),6);
-                               EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),6));
-                               plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの6ページを解放した");
+                               if(EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),6))){
+                                   EnderSystem.setEClockPage((Player) event.getWhoClicked(),6);
+                                   plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの6ページを解放した");
+                                   SoundManager.sendSuccess((Player) event.getWhoClicked());
+                               }
                            }
                            case "7ページまで開放しますか？" ->{
-                               EnderSystem.setEClockPage((Player) event.getWhoClicked(),7);
-                               EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),7));
-                               plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの7ページを解放した");
+                               if(EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),7))){
+                                   EnderSystem.setEClockPage((Player) event.getWhoClicked(),7);
+                                   plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの7ページを解放した");
+                                   SoundManager.sendSuccess((Player) event.getWhoClicked());
+                               }
                            }
                            case "8ページまで開放しますか？" ->{
-                               EnderSystem.setEClockPage((Player) event.getWhoClicked(),8);
-                               EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),8));
-                               plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの8ページを解放した");
+                               if(EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),8))){
+                                   EnderSystem.setEClockPage((Player) event.getWhoClicked(),8);
+                                   plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの8ページを解放した");
+                                   SoundManager.sendSuccess((Player) event.getWhoClicked());
+                               }
                            }
                            case "9ページまで開放しますか？" ->{
-                               EnderSystem.setEClockPage((Player) event.getWhoClicked(),9);
-                               EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),9));
-                               plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの9ページを解放した");
+                               if(EnderSystem.removeBank((Player) event.getWhoClicked(),EnderSystem.CalculateCost((Player) event.getWhoClicked(),9))){
+                                   EnderSystem.setEClockPage((Player) event.getWhoClicked(),9);
+                                   plugin.getLogger().info("(ECP)"+event.getWhoClicked().getName()+"がエンダーチェストの9ページを解放した");
+                                   SoundManager.sendSuccess((Player) event.getWhoClicked());
+                               }
                            }
                        }
                        event.getWhoClicked().closeInventory();

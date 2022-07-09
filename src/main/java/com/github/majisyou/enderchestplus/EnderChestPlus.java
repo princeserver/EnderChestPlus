@@ -1,5 +1,6 @@
 package com.github.majisyou.enderchestplus;
 
+import com.github.majisyou.enderchestplus.Command.Cmd_deleteEnderChest;
 import com.github.majisyou.enderchestplus.Command.Cmd_watchEnderChest;
 import com.github.majisyou.enderchestplus.Event.CloseEnderChest;
 import com.github.majisyou.enderchestplus.Event.EnderchestRightClick;
@@ -41,6 +42,8 @@ public final class EnderChestPlus extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        setupPermissions();
+        setupChat();
 
         //config
         saveDefaultConfig();
@@ -53,6 +56,7 @@ public final class EnderChestPlus extends JavaPlugin {
 
         //Command
         new Cmd_watchEnderChest(this);
+        new Cmd_deleteEnderChest(this);
 
         //Config
         EnderSystem.reloadEClock();
@@ -63,6 +67,7 @@ public final class EnderChestPlus extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        EnderSystem.onDisableEvent();
         getLogger().info("エンダーチェストプラスを閉じた");
     }
 

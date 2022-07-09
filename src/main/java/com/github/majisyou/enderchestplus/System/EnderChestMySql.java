@@ -160,6 +160,23 @@ public class EnderChestMySql {
         }
     }
 
+    public void deleteEnderChestAll(UUID player){
+        try {
+            openConnection();
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM "+tablename2+" WHERE uuid = ?;");
+            try {
+                statement.setString(1, player.toString());
+                statement.executeUpdate();
+            } finally {
+                if (statement != null) {
+                    statement.close();
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String readEnderChest(UUID player,int page){
         try {
             openConnection();
