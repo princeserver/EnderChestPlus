@@ -6,16 +6,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 
 import javax.xml.bind.DatatypeConverter;
@@ -32,13 +31,36 @@ public class EnderSystem {
 
     public static void RecordEnderPage(OfflinePlayer player, Inventory inventory , int page){
         UUID uuid = player.getUniqueId();
-        String playerData = toJson(inventory,0,26);
+        String playerData = toJson(inventory,0,26,player);
 
-        EnderChestMySql statement = new EnderChestMySql();
-        statement.deleteEnderChest(uuid,page);
-        statement.insertEnderChest(uuid,page,playerData);
+        ItemStack itemStack = inventory.getItem(26+page);
+        if(itemStack != null && !itemStack.getType().equals(Material.AIR)){
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+            NamespacedKey key = new NamespacedKey(plugin,"decode");
+            String oldData = pdc.get(key,PersistentDataType.STRING);
+            if(oldData != null  && oldData.equals(playerData)){
+                return;
+            }
+        }
+
+        try {
+            EnderChestMySql statement = new EnderChestMySql();
+            statement.deleteEnderChest(uuid,page);
+            statement.insertEnderChest(uuid,page,playerData);
+        }catch (Exception e){
+            plugin.getLogger().info("(ECP)"+"mysqlRecordでエラー");
+            if(player.getPlayer()!=null && itemStack != null){
+                player.getPlayer().getWorld().dropItem(player.getPlayer().getLocation(),itemStack);
+                player.getPlayer().sendMessage(ChatColor.RED+"エンダーチェストでバグが発生した、このアイテムを運営に渡して下さい");
+                return;
+            }
+            plugin.getLogger().info("(ECP)"+player.getName()+"のエンダーチェストでバグが発生し、復元はできなさそう");
+        }
+
 //        inventory.clear();
     }
+
 
     public static void deleteEnderPage(OfflinePlayer player,int page){
         EnderChestMySql statement = new EnderChestMySql();
@@ -86,15 +108,45 @@ public class EnderSystem {
     public static Inventory ReadEnderPage(OfflinePlayer player,Inventory inventory,int page){
         UUID uuid = player.getUniqueId();
         EnderChestMySql statement = new EnderChestMySql();
-        JsonArray invData = (new Gson()).fromJson(statement.readEnderChest(uuid,page), JsonArray.class);
-        if(invData != null){
-            for (JsonElement jo : invData){
-                ItemStack item = toItem(jo.getAsJsonObject());
-                Integer index = getIndex(jo.getAsJsonObject());
-                inventory.setItem(index,item);
+        String playerdata = statement.readEnderChest(uuid,page);
+        try {
+            JsonArray invData = (new Gson()).fromJson(playerdata, JsonArray.class);
+            if(invData != null){
+                for (JsonElement jo : invData){
+                    try {
+                        ItemStack item = toItem(jo.getAsJsonObject());
+                        Integer index = getIndex(jo.getAsJsonObject());
+                        inventory.setItem(index,item);
+                    }catch (Exception e){
+                        plugin.getLogger().info("(ECP)"+"Jsonからアイテムに戻す作業でエラーを吐いた");
+                        if(player.getPlayer()!=null){
+                            player.getPlayer().sendMessage(ChatColor.RED+"エンダーチェストでバグが発生した");
+                        }
+                    }
+                }
+            }
+            setPageData(page,inventory,playerdata);
+            return inventory;
+        }catch (Exception e){
+            plugin.getLogger().info("(ECP)"+"JsonArrayに戻す作業でエラーを吐いた");
+            plugin.getLogger().info(playerdata);
+            if(player.getPlayer()!=null){
+                player.getPlayer().sendMessage(ChatColor.RED+"エンダーチェストでバグが発生した");
             }
         }
-        return inventory;
+        return Bukkit.createInventory(null, InventoryType.CHEST);
+    }
+
+    public static void setPageData(int page,Inventory inventory,String playerData){
+        ItemStack itemStack = inventory.getItem(26+page);
+        if(itemStack == null||itemStack.getType().equals(Material.AIR)){
+            return;
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        NamespacedKey key = new NamespacedKey(plugin,"decode");
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        pdc.set(key, PersistentDataType.STRING,playerData);
+        itemStack.setItemMeta(itemMeta);
     }
 
     public static void saveEClock(OfflinePlayer player, int page){
@@ -192,21 +244,46 @@ public class EnderSystem {
         JsonObject jo = new JsonObject();
         jo.addProperty("index", index);
         jo.addProperty("data", str);
+
         return jo;
     }
 
-    public static String toJson(Inventory inv, int min, int max) {
+    public static String toJson(Inventory inv, int min, int max,OfflinePlayer player) {
         JsonArray inventory = new JsonArray();
+        JsonArray JudgeData;
 
         for (int i = min; i <= max; i++){
             ItemStack item = inv.getItem(i);
+            String Limit;
             if(item != null){
                 JsonObject value = toJson(item,i);
+                JudgeData = inventory.deepCopy();
+                JudgeData.add(value);
+                Limit = (new Gson()).toJson(JudgeData);
+                if(Limit.length() >= 65535){
+                    plugin.getLogger().info("(ECP)"+player.getName()+ "のページの(文字列)が大きすぎた");
+                    if(player.getPlayer()!=null){
+                        player.getPlayer().sendMessage(ChatColor.RED+"エンダーチェストで不具合が生じた");
+                    }
+                    for (int j = i; j <= max; j++){
+                        item = inv.getItem(j);
+                        if(item != null)
+                        plugin.getLogger().info("(ECP)"+"inv."+j+":"+toJson(item,i));
+                    }
+                    break;
+                }
                 inventory.add(value);
             }
         }
-
         return (new Gson()).toJson(inventory);
+        //必要ないけど念のために残しておく
+//        String result = (new Gson()).toJson(inventory);
+//        if(result.length() < 65535){
+//            return result;
+//        }
+//        plugin.getLogger().info("(ECP)"+"ページの(文字列)が大きすぎた"+result.length());
+//        result = result.substring(0,65534);
+//        return result;
     }
 
     public static ItemStack toItem(JsonObject data) {
