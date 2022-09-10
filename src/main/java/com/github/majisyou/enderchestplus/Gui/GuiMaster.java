@@ -1,18 +1,23 @@
 package com.github.majisyou.enderchestplus.Gui;
 
+import com.github.majisyou.enderchestplus.EnderChestPlus;
 import com.github.majisyou.enderchestplus.System.EnderSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GuiMaster {
+    private static final EnderChestPlus plugin = EnderChestPlus.getInstance();
 
     public static void openEnderChest(Player player,int page){
         Inventory inventory = Bukkit.createInventory(null,36,"エンダーチェストPage"+page);
@@ -32,12 +37,23 @@ public class GuiMaster {
                                                     EClock1,EClock2,EClock3,EClock4,EClock5,EClock6,EClock7,EClock8,EClock9,};
         inventory.setContents(GuiContainer);
 
-        EnderSystem.getEClockPage(player);  //これはMySqlにデータが無い人のための
+        EnderSystem.getEClockPage(player);  //これはMySqlにデータが無い人のための部分
         UnlockPage(player,inventory,page);
         EnderSystem.ReadEnderPage(player,inventory,page);
 
-
         player.openInventory(inventory);
+    }
+
+    public static void setPageData(int page,Inventory inventory,String playerData){
+        ItemStack itemStack = inventory.getItem(26+page);
+        if(itemStack == null||itemStack.getType().equals(Material.AIR)){
+            return;
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        NamespacedKey key = new NamespacedKey(plugin,"decode");
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        pdc.set(key, PersistentDataType.STRING,playerData);
+        itemStack.setItemMeta(itemMeta);
     }
 
     public static void openUnlockPage(Player player,int page){
