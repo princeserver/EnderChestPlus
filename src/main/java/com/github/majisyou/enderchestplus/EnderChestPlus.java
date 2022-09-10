@@ -5,6 +5,7 @@ import com.github.majisyou.enderchestplus.Command.Cmd_watchEnderChest;
 import com.github.majisyou.enderchestplus.Event.CloseEnderChest;
 import com.github.majisyou.enderchestplus.Event.EnderchestRightClick;
 import com.github.majisyou.enderchestplus.Event.InventoryClick;
+import com.github.majisyou.enderchestplus.Event.JoinEvent;
 import com.github.majisyou.enderchestplus.System.EnderSystem;
 import com.github.majisyou.enderchestplus.System.ConfigManager;
 import net.milkbowl.vault.chat.Chat;
@@ -53,6 +54,7 @@ public final class EnderChestPlus extends JavaPlugin {
         new CloseEnderChest(this);
         new EnderchestRightClick(this);
         new InventoryClick(this);
+        new JoinEvent(this);
 
         //Command
         new Cmd_watchEnderChest(this);
@@ -67,6 +69,7 @@ public final class EnderChestPlus extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        InventoryClick.ResetInterval();
         EnderSystem.onDisableEvent();
         getLogger().info("エンダーチェストプラスを閉じた");
     }
