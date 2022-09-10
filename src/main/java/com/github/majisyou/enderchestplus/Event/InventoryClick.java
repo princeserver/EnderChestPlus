@@ -12,11 +12,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 public class InventoryClick implements Listener {
 
     private static final EnderChestPlus plugin = EnderChestPlus.getInstance();
+    private static final Map<UUID,Long> Interval = new HashMap<>();
     public InventoryClick(EnderChestPlus plugin){plugin.getServer().getPluginManager().registerEvents(this,plugin);}
-
 
     @EventHandler
     public static void PageClick(InventoryClickEvent event){
@@ -28,75 +33,79 @@ public class InventoryClick implements Listener {
                             event.setCancelled(true);
                             SoundManager.OpenPage((Player) event.getWhoClicked());
                             if(!event.getInventory().getType().equals(InventoryType.PLAYER)){
-                                switch (event.getCurrentItem().getItemMeta().getDisplayName()){
-                                    case "1ページ" ->{
-                                        GuiMaster.openEnderChest((Player) event.getWhoClicked(),1);
-                                    }
-                                    case "2ページ" ->{
-                                        GuiMaster.openEnderChest((Player) event.getWhoClicked(),2);
-                                    }
-                                    case "3ページ" ->{
-                                        GuiMaster.openEnderChest((Player) event.getWhoClicked(),3);
-                                    }
-                                    case "4ページ" ->{
-                                        GuiMaster.openEnderChest((Player) event.getWhoClicked(),4);
-                                    }
-                                    case "5ページ" ->{
-                                        GuiMaster.openEnderChest((Player) event.getWhoClicked(),5);
-                                    }
-                                    case "6ページ" ->{
-                                        GuiMaster.openEnderChest((Player) event.getWhoClicked(),6);
-                                    }
-                                    case "7ページ" ->{
-                                        GuiMaster.openEnderChest((Player) event.getWhoClicked(),7);
-                                    }
-                                    case "8ページ" ->{
-                                        GuiMaster.openEnderChest((Player) event.getWhoClicked(),8);
-                                    }
-                                    case "9ページ" ->{
-                                        GuiMaster.openEnderChest((Player) event.getWhoClicked(),9);
-                                    }
+                                if(CheckInterval(event.getWhoClicked().getUniqueId())) { //ここでインターバルの設定
+                                    switch (event.getCurrentItem().getItemMeta().getDisplayName()){
+                                        case "1ページ" ->{
+                                            GuiMaster.openEnderChest((Player) event.getWhoClicked(),1);
+                                        }
+                                        case "2ページ" ->{
+                                            GuiMaster.openEnderChest((Player) event.getWhoClicked(),2);
+                                        }
+                                        case "3ページ" ->{
+                                            GuiMaster.openEnderChest((Player) event.getWhoClicked(),3);
+                                        }
+                                        case "4ページ" ->{
+                                            GuiMaster.openEnderChest((Player) event.getWhoClicked(),4);
+                                        }
+                                        case "5ページ" ->{
+                                            GuiMaster.openEnderChest((Player) event.getWhoClicked(),5);
+                                        }
+                                        case "6ページ" ->{
+                                            GuiMaster.openEnderChest((Player) event.getWhoClicked(),6);
+                                        }
+                                        case "7ページ" ->{
+                                            GuiMaster.openEnderChest((Player) event.getWhoClicked(),7);
+                                        }
+                                        case "8ページ" ->{
+                                            GuiMaster.openEnderChest((Player) event.getWhoClicked(),8);
+                                        }
+                                        case "9ページ" ->{
+                                            GuiMaster.openEnderChest((Player) event.getWhoClicked(),9);
+                                        }
 
-                                    case "2ページ"+"§c＜未開放＞" ->{
-                                        if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),2)){
-                                            GuiMaster.openUnlockPage((Player) event.getWhoClicked(),2);
+                                        case "2ページ"+"§c＜未開放＞" ->{
+                                            if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),2)){
+                                                GuiMaster.openUnlockPage((Player) event.getWhoClicked(),2);
+                                            }
+                                        }
+                                        case "3ページ"+"§c＜未開放＞" ->{
+                                            if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),3)){
+                                                GuiMaster.openUnlockPage((Player) event.getWhoClicked(),3);
+                                            }
+                                        }
+                                        case "4ページ"+"§c＜未開放＞" ->{
+                                            if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),4)){
+                                                GuiMaster.openUnlockPage((Player) event.getWhoClicked(),4);
+                                            }
+                                        }
+                                        case "5ページ"+"§c＜未開放＞" ->{
+                                            if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),5)){
+                                                GuiMaster.openUnlockPage((Player) event.getWhoClicked(),5);
+                                            }
+                                        }
+                                        case "6ページ"+"§c＜未開放＞" ->{
+                                            if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),6)){
+                                                GuiMaster.openUnlockPage((Player) event.getWhoClicked(),6);
+                                            }
+                                        }
+                                        case "7ページ"+"§c＜未開放＞" ->{
+                                            if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),7)){
+                                                GuiMaster.openUnlockPage((Player) event.getWhoClicked(),7);
+                                            }
+                                        }
+                                        case "8ページ"+"§c＜未開放＞" ->{
+                                            if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),8)){
+                                                GuiMaster.openUnlockPage((Player) event.getWhoClicked(),8);
+                                            }
+                                        }
+                                        case "9ページ"+"§c＜未開放＞" ->{
+                                            if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),9)){
+                                                GuiMaster.openUnlockPage((Player) event.getWhoClicked(),9);
+                                            }
                                         }
                                     }
-                                    case "3ページ"+"§c＜未開放＞" ->{
-                                        if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),3)){
-                                            GuiMaster.openUnlockPage((Player) event.getWhoClicked(),3);
-                                        }
-                                    }
-                                    case "4ページ"+"§c＜未開放＞" ->{
-                                        if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),4)){
-                                            GuiMaster.openUnlockPage((Player) event.getWhoClicked(),4);
-                                        }
-                                    }
-                                    case "5ページ"+"§c＜未開放＞" ->{
-                                        if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),5)){
-                                            GuiMaster.openUnlockPage((Player) event.getWhoClicked(),5);
-                                        }
-                                    }
-                                    case "6ページ"+"§c＜未開放＞" ->{
-                                        if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),6)){
-                                            GuiMaster.openUnlockPage((Player) event.getWhoClicked(),6);
-                                        }
-                                    }
-                                    case "7ページ"+"§c＜未開放＞" ->{
-                                        if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),7)){
-                                            GuiMaster.openUnlockPage((Player) event.getWhoClicked(),7);
-                                        }
-                                    }
-                                    case "8ページ"+"§c＜未開放＞" ->{
-                                        if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),8)){
-                                            GuiMaster.openUnlockPage((Player) event.getWhoClicked(),8);
-                                        }
-                                    }
-                                    case "9ページ"+"§c＜未開放＞" ->{
-                                        if(EnderSystem.JudgeCost2((Player) event.getWhoClicked(),9)){
-                                            GuiMaster.openUnlockPage((Player) event.getWhoClicked(),9);
-                                        }
-                                    }
+                                }else {
+                                    event.getWhoClicked().sendMessage(ChatColor.RED+"不具合防止のため、エンダーチェストのページを開ける際1秒のインターバルを設けています");
                                 }
                             }
                         }
@@ -175,6 +184,23 @@ public class InventoryClick implements Listener {
                    }
                }
            }
+        }
+    }
+    public static void ResetInterval(){
+        Interval.clear();
+    }
+    public static boolean CheckInterval(UUID player){
+        Long nowTime = System.currentTimeMillis();
+        if(Interval.containsKey(player)){
+            if(nowTime - Interval.get(player) < 1000){
+                return false;
+            }else {
+                Interval.replace(player,nowTime);
+                return true;
+            }
+        }else {
+            Interval.put(player,nowTime);
+            return true;
         }
     }
 }
